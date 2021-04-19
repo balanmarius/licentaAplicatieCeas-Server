@@ -1,0 +1,30 @@
+<svg class="background">
+  <text id="hoursLabel" />
+  <text id="minutesLabel" />
+  <text id="secondsLabel" />
+  
+  <line x1="50%" y1="13%" x2="50%" y2="88%" fill="limegreen" stroke-width="2" />
+  
+  <section x="55%" y="20%" width="80" height="20">
+    <image href="heartRate.png" id="heartIcon" />
+    <text id="heartRateLabel" />
+  </section>
+  
+  <section x="55%" y="30%" width="80" height="20">
+    <image href="calories.png" id="caloriesIcon" />
+    <text id="caloriesLabel"  />
+  </section>
+  
+  <section x="55%" y="40%" width="80" height="20">
+    <image href="footSteps.png" id="footStepsIcon" />
+    <text id="footStepsLabel" />
+  </section>
+  
+  <text id="ampmLabel" />
+  
+  <section x="55%" y="70%" width="100" height="15">
+    <text id="weekDayLabel" />
+    <text id="monthLabel" />
+    <text id="dayLabel" />
+  </section>
+</svg>

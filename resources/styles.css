@@ -1,0 +1,110 @@
+.background {
+  viewport-fill: white;
+}
+
+#ampmLabel {
+  font-size: 25;
+  font-family:Colfax-Medium;
+  text-length:32;
+  text-anchor:end;
+  x:45%;
+  y:12%;
+  fill: limegreen;
+}
+
+#hoursLabel {
+  font-size: 100;
+  font-family: Colfax-Bold;
+  text-length: 32;
+  text-anchor: end;
+  x: 45%;
+  y: 40%;
+  fill: limegreen;
+}
+
+#minutesLabel {
+  font-size: 100;
+  font-family: Colfax-Light;
+  text-length: 32;
+  text-anchor: end;
+  x: 45%;
+  y: 70%;
+  fill: limegreen;
+}
+
+#secondsLabel {
+  font-size: 40;
+  font-family: Colfax-Light;
+  text-length: 32;
+  text-anchor: end;
+  x: 45%;
+  y: 85%;
+  fill: limegreen;
+}
+
+#heartRateLabel{
+  font-size:24;
+  font-family:System-Bold;
+  text-length:32;
+  text-anchor:start;
+  x: 30;
+  fill:red;
+}
+#heartIcon{
+  width:25;
+  height:25;
+}
+
+#footStepsLabel{
+  font-size:24;
+  font-family:System-Bold;
+  text-length:32;
+  text-anchor:start;
+  x: 30;
+  fill:maroon;
+}
+#footStepsIcon{
+  width:25;
+  height:25;
+}
+
+#caloriesLabel{
+  font-size:24;
+  font-family:System-Bold;
+  text-length:32;
+  text-anchor:start;
+  x: 30;
+  fill:orangered;
+}
+#caloriesIcon{
+  width:25;
+  height:25;
+}
+
+#weekDayLabel{
+  font-size:20;
+  font-family:Colfax-Medium;
+  text-length:32;
+  text-anchor:start;
+  fill:black;
+}
+
+#monthLabel{
+  font-size:20;
+  font-family:Colfax-Medium;
+  text-length:32;
+  text-anchor:start;
+  x:35;
+  fill:black;
+}
+
+#dayLabel{
+  font-size:20;
+  font-family:Colfax-Medium;
+  text-length:32;
+  text-anchor:start;
+  x:90;
+  fill:black;
+}
+
+

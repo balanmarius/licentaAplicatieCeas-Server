@@ -1,0 +1,47 @@
+{
+  "devDependencies": {
+    "@fitbit/sdk": "^4.2.1",
+    "@fitbit/sdk-cli": "^1.7.3"
+  },
+  "scripts": {
+    "build": "fitbit-build",
+    "debug": "fitbit"
+  },
+  "fitbit": {
+    "appUUID": "0cc0e420-6f56-4d76-a765-24c901a747a7",
+    "appType": "clockface",
+    "appDisplayName": "Exemplu 1",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "#000000",
+    "requestedPermissions": [
+      "access_activity",
+      "access_exercise",
+      "access_heart_rate",
+      "access_internet",
+      "access_location",
+      "run_background",
+      "access_sleep",
+      "access_user_profile"
+    ],
+    "buildTargets": [
+      "mira"
+    ],
+    "i18n": {
+      "en-US": {
+        "name": "Exemplu 1"
+      }
+    },
+    "defaultLanguage": "en-US"
+  },
+  "dependencies": {
+    "events": "^3.3.0",
+    "express": "^4.17.1",
+    "firebase": "^8.4.1",
+    "firebase-admin": "9.6.0",
+    "firebase-functions": "3.13.2",
+    "fs": "0.0.1-security",
+    "install": "0.13.0",
+    "npm": "7.10.0",
+    "ws": "^7.4.5"
+  }
+}
