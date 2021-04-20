@@ -15,7 +15,7 @@ async function processAllFiles() {
 
 setInterval(() => {
   onOpen();
-}, 5000);
+}, 1000);
 
 websocket.addEventListener("open", onOpen);
 function onOpen(evt) {

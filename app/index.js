@@ -140,7 +140,7 @@ setInterval(() => {
   let steps_data  = fs.readFileSync("json.txt", "json");
   steps_data[`${datetime}`]=todayStats.adjusted.steps
   fs.writeFileSync("json.txt", steps_data, "json");
-}, 5000);
+}, 1000);
 
 
 
