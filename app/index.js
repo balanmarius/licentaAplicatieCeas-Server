@@ -8,6 +8,9 @@ import { today as todayStats } from "user-activity";
 import { geolocation } from "geolocation";
 import * as fs from "fs";
 import { listDirSync } from "fs";
+import { outbox } from "file-transfer";
+import { memory } from "system";
+import * as messaging from "messaging";
 
 // Update the clock every minute
 clock.granularity = "seconds";
@@ -82,7 +85,7 @@ function showDate(evt) {
 }
 
 if (HeartRateSensor) {
-  const hrm = new HeartRateSensor({ frequency: 1 });
+  var hrm = new HeartRateSensor({ frequency: 1 });
   hrm.addEventListener("reading", () => {
     // console.log(`Current heart rate : ${hrm.heartRate}`);
     heartRateLabel.text = `${hrm.heartRate}`;
@@ -107,56 +110,64 @@ function locationError(error) {
   console.log("Error: " + error.code, "Message: " + error.message);
 }
 
-//////////////////////////////////////operatii cu fisiere//////https://dev.fitbit.com/build/guides/file-system///////se pot sterge se pot redenumi
-function file_exists(filename) {
-  let dirIter = "";
-  let listDir = listDirSync("");
-  while((dirIter = listDir.next()) && !dirIter.done) if(dirIter.value===filename) return true;
-  return false;
-}
-if(file_exists("json.txt")) {
-  console.log("exists!");
-} else {
-  console.log("doesn't exist!");
+//////////////////////////////////////
+if (fs.existsSync("/private/data/steps.txt")) {
+  console.log("file exists!");
 }
 
-let json_data = {};
-fs.writeFileSync("json.txt", json_data, "json");
+let json_steps = {};
+json_steps["id"] = "steps";
+fs.writeFileSync("steps.txt", json_steps, "json");
+let json_hr = {};
+json_hr["id"] = "heartRate";
+fs.writeFileSync("heartRate.txt", json_hr, "json");
 // let json_object  = fs.readFileSync("json.txt", "json");
 // console.log("JSON guid: " + json_object.name);
+// import * as fs from "fs";
+// fs.unlinkSync("json.txt");
+import { listDirSync } from "fs";
+const listDir = listDirSync("/private/data");
+do {
+  const dirIter = listDir.next();
+  if (dirIter.done) {
+    break;
+  }
+  console.log(dirIter.value);
+} while (true);
 
-import { outbox } from "file-transfer";
+// var currentdate = new Date();
+//de incercat sa trimit ultima data live sub forma de {pasi live: val}, iar din server.js sa trimit in cloud json cu{data live: val}
+function generateData() {
+  // var currentdate = new Date();
+  // var datetime =
+  //   currentdate.getDate() +
+  //   "/" +
+  //   (currentdate.getMonth() + 1) +
+  //   "/" +
+  //   currentdate.getFullYear() +
+  //   " @ " +
+  //   currentdate.getHours() +
+  //   ":" +
+  //   currentdate.getMinutes() +
+  //   ":" +
+  //   currentdate.getSeconds();
+  let json_steps = fs.readFileSync("steps.txt", "json");
+  // json_steps[`${datetime}`] = todayStats.adjusted.steps;
+  json_steps["current steps"] = todayStats.adjusted.steps;
+  fs.writeFileSync("steps.txt", json_steps, "json");
+  outbox.enqueueFile("/private/data/steps.txt");
+
+  let json_hr = fs.readFileSync("heartRate.txt", "json");
+  // json_hr[`${datetime}`] = `${hrm.heartRate}`;
+  json_hr["current hr"] = `${hrm.heartRate}`;
+  fs.writeFileSync("heartRate.txt", json_hr, "json");
+  outbox.enqueueFile("/private/data/heartRate.txt");
+
+  // console.log(fs.statSync("steps.txt").size+' bytes')
+  // console.log(fs.statSync("heartRate.txt").size+' bytes')
+  // console.log("JS memory: " + memory.js.used + "/" + memory.js.total);
+}
 
 setInterval(() => {
-  outbox
-    .enqueueFile("/private/data/json.txt");
-  var currentdate = new Date(); 
-  var datetime = currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " @ "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds(); 
-  let steps_data  = fs.readFileSync("json.txt", "json");
-  steps_data[`${datetime}`]=todayStats.adjusted.steps
-  fs.writeFileSync("json.txt", steps_data, "json");
+  generateData();
 }, 1000);
-
-
-
-
-
-
-
-
-
-//pt a vedea fisierele din /private/data
-// import { listDirSync } from "fs";
-// const listDir = listDirSync("/private/data");
-// do {
-//   const dirIter = listDir.next();
-//   if (dirIter.done) {
-//     break;
-//   }
-//   console.log(dirIter.value);
-// } while (true);
