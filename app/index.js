@@ -11,6 +11,8 @@ import { listDirSync } from "fs";
 import { outbox } from "file-transfer";
 import { memory } from "system";
 import * as messaging from "messaging";
+import { Accelerometer } from "accelerometer";
+import { Barometer } from "barometer";
 
 // Update the clock every minute
 clock.granularity = "seconds";
@@ -93,39 +95,63 @@ if (HeartRateSensor) {
   hrm.start();
 }
 
-///geolocation
-
-geolocation.getCurrentPosition(locationSuccess, locationError, {
-  timeout: 60 * 1000,
-});
-
-function locationSuccess(position) {
-  console.log(
-    "Latitude: " + position.coords.latitude,
-    "Longitude: " + position.coords.longitude
-  );
+if (Accelerometer) {
+  console.log("This device has an Accelerometer!");
+  const accelerometer = new Accelerometer({ frequency: 1 });
+  accelerometer.addEventListener("reading", () => {
+    // console.log(
+    //   `Accelerometer reading: ${accelerometer.x},${accelerometer.y},${accelerometer.z}`
+    // );
+  });
+  accelerometer.start();
+} else {
+  console.log("This device does NOT have an Accelerometer!");
 }
 
-function locationError(error) {
-  console.log("Error: " + error.code, "Message: " + error.message);
+if (Barometer) {
+  console.log("has barometer");
+  const barometer = new Barometer({ frequency: 1 });
+  barometer.addEventListener("reading", () => {
+    // console.log(`Pressure: ${barometer.pressure} Pa`);
+  });
+  barometer.start();
+} else {
+  console.log("no barometer");
 }
 
 //////////////////////////////////////
-if (fs.existsSync("/private/data/steps.txt")) {
-  console.log("file exists!");
-}
+// if (fs.existsSync("/private/data/steps.txt")) {
+//   console.log("file exists!");
+// }
 
-let json_steps = {};
-json_steps["id"] = "steps";
-fs.writeFileSync("steps.txt", json_steps, "json");
+let json_activity = {};
+json_activity["id"] = "activity";
+fs.writeFileSync("activity.txt", json_activity, "json");
+
 let json_hr = {};
 json_hr["id"] = "heartRate";
 fs.writeFileSync("heartRate.txt", json_hr, "json");
+
+let json_geolocation = {};
+json_geolocation["id"] = "geolocation";
+fs.writeFileSync("geolocation.txt", json_geolocation, "json");
+
+let json_accelerometer = {};
+json_accelerometer["id"] = "accelerometer";
+fs.writeFileSync("accelerometer.txt", json_accelerometer, "json");
+
+let json_barometer = {};
+json_barometer["id"] = "barometer";
+fs.writeFileSync("barometer.txt", json_barometer, "json");
+
+
 // let json_object  = fs.readFileSync("json.txt", "json");
 // console.log("JSON guid: " + json_object.name);
 // import * as fs from "fs";
 // fs.unlinkSync("json.txt");
+
 import { listDirSync } from "fs";
+import { bin } from "npm";
 const listDir = listDirSync("/private/data");
 do {
   const dirIter = listDir.next();
@@ -135,39 +161,52 @@ do {
   console.log(dirIter.value);
 } while (true);
 
-// var currentdate = new Date();
-//de incercat sa trimit ultima data live sub forma de {pasi live: val}, iar din server.js sa trimit in cloud json cu{data live: val}
 function generateData() {
-  // var currentdate = new Date();
-  // var datetime =
-  //   currentdate.getDate() +
-  //   "/" +
-  //   (currentdate.getMonth() + 1) +
-  //   "/" +
-  //   currentdate.getFullYear() +
-  //   " @ " +
-  //   currentdate.getHours() +
-  //   ":" +
-  //   currentdate.getMinutes() +
-  //   ":" +
-  //   currentdate.getSeconds();
-  let json_steps = fs.readFileSync("steps.txt", "json");
-  // json_steps[`${datetime}`] = todayStats.adjusted.steps;
-  json_steps["current steps"] = todayStats.adjusted.steps;
-  fs.writeFileSync("steps.txt", json_steps, "json");
-  outbox.enqueueFile("/private/data/steps.txt");
+  let json_activity = fs.readFileSync("activity.txt", "json");
+  json_activity["current steps"] = todayStats.adjusted.steps;
+  json_activity["current calories"] = todayStats.adjusted.calories;
+  json_activity["current floors"] = todayStats.adjusted.elevationGain;
+  json_activity["current distance"] = todayStats.adjusted.distance;
+  json_activity["current AM"] = todayStats.adjusted.activeZoneMinutes.total;
+  fs.writeFileSync("activity.txt", json_activity, "json");
+  outbox.enqueueFile("/private/data/activity.txt");
 
   let json_hr = fs.readFileSync("heartRate.txt", "json");
-  // json_hr[`${datetime}`] = `${hrm.heartRate}`;
-  json_hr["current hr"] = `${hrm.heartRate}`;
+  json_hr["current hr"] = hrm.heartRate;
   fs.writeFileSync("heartRate.txt", json_hr, "json");
   outbox.enqueueFile("/private/data/heartRate.txt");
 
-  // console.log(fs.statSync("steps.txt").size+' bytes')
-  // console.log(fs.statSync("heartRate.txt").size+' bytes')
-  // console.log("JS memory: " + memory.js.used + "/" + memory.js.total);
+  let json_geolocation = fs.readFileSync("geolocation.txt", "json");
+  geolocation.getCurrentPosition(function (position) {
+    json_geolocation["latitude"] = position.coords.latitude;
+    json_geolocation["longitude"] = position.coords.longitude;
+    fs.writeFileSync("geolocation.txt", json_geolocation, "json");
+  });
+  outbox.enqueueFile("/private/data/geolocation.txt");
+
+  let json_accelerometer = fs.readFileSync("accelerometer.txt", "json");
+  json_accelerometer["x"] = accelerometer.x;
+  json_accelerometer["y"] = accelerometer.y;
+  json_accelerometer["z"] = accelerometer.z;
+  fs.writeFileSync("accelerometer.txt", json_accelerometer, "json");
+  outbox.enqueueFile("/private/data/accelerometer.txt");
+
+  let json_barometer = fs.readFileSync("barometer.txt", "json");
+  json_barometer["barometer pressure"] = barometer.pressure;
+  fs.writeFileSync("barometer.txt", json_barometer, "json");
+  outbox.enqueueFile("/private/data/barometer.txt");
+
+  
+
+  // console.log(fs.statSync("geolocation.txt").size+' bytes');
+  console.log("JS memory: " + memory.js.used + "/" + memory.js.total);
 }
 
 setInterval(() => {
   generateData();
+  // console.log(todayStats.adjusted.calories); // calorii
+  // console.log(todayStats.adjusted.elevationGain); //floors
+  // console.log(todayStats.adjusted.distance);  //distanta in metri
+  // console.log(`${todayStats.adjusted.activeZoneMinutes.total} Active Minutes`);  //total=cardio+fatBurn+peak -> pot fi luate si separat
 }, 1000);
+//nu are giroscop+orientare

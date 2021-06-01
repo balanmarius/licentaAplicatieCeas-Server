@@ -4,11 +4,11 @@
 
 #ampmLabel {
   font-size: 25;
-  font-family:Colfax-Medium;
-  text-length:32;
-  text-anchor:end;
-  x:45%;
-  y:12%;
+  font-family: Colfax-Medium;
+  /* text-length: 32; */
+  text-anchor: end;
+  x: 45%;
+  y: 12%;
   fill: limegreen;
 }
 
@@ -94,7 +94,7 @@
   font-family:Colfax-Medium;
   text-length:32;
   text-anchor:start;
-  x:35;
+  x:45;
   fill:black;
 }
 
