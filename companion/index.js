@@ -1,6 +1,6 @@
 import { inbox } from "file-transfer";
-// const wsUri = "ws://192.168.100.30:3000/";
-const wsUri = "ws://127.0.0.1:3000/";
+const wsUri = "ws://192.168.100.30:3000/";
+// const wsUri = "ws://127.0.0.1:3000/";
 
 const websocket = new WebSocket(wsUri);
 

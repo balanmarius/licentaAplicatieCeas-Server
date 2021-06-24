@@ -95,17 +95,19 @@ if (HeartRateSensor) {
   hrm.start();
 }
 
+var accel;
 if (Accelerometer) {
-  console.log("This device has an Accelerometer!");
-  const accelerometer = new Accelerometer({ frequency: 1 });
-  accelerometer.addEventListener("reading", () => {
-    // console.log(
-    //   `Accelerometer reading: ${accelerometer.x},${accelerometer.y},${accelerometer.z}`
-    // );
+  // sampling at 1Hz (once per second)
+  accel = new Accelerometer({ frequency: 1 });
+  accel.addEventListener("reading", () => {
+    console.log(
+      `ts: ${accel.timestamp}, \
+       x: ${accel.x}, \
+       y: ${accel.y}, \
+       z: ${accel.z}`
+    );
   });
-  accelerometer.start();
-} else {
-  console.log("This device does NOT have an Accelerometer!");
+  accel.start();
 }
 
 if (Barometer) {
@@ -143,7 +145,6 @@ fs.writeFileSync("accelerometer.txt", json_accelerometer, "json");
 let json_barometer = {};
 json_barometer["id"] = "barometer";
 fs.writeFileSync("barometer.txt", json_barometer, "json");
-
 
 // let json_object  = fs.readFileSync("json.txt", "json");
 // console.log("JSON guid: " + json_object.name);
@@ -185,9 +186,10 @@ function generateData() {
   outbox.enqueueFile("/private/data/geolocation.txt");
 
   let json_accelerometer = fs.readFileSync("accelerometer.txt", "json");
-  json_accelerometer["x"] = accelerometer.x;
-  json_accelerometer["y"] = accelerometer.y;
-  json_accelerometer["z"] = accelerometer.z;
+  json_accelerometer["x"] = accel.x;
+  json_accelerometer["y"] = accel.y;
+  json_accelerometer["z"] = accel.z;
+  // console.log(json_accelerometer["x"]);
   fs.writeFileSync("accelerometer.txt", json_accelerometer, "json");
   outbox.enqueueFile("/private/data/accelerometer.txt");
 
@@ -196,17 +198,31 @@ function generateData() {
   fs.writeFileSync("barometer.txt", json_barometer, "json");
   outbox.enqueueFile("/private/data/barometer.txt");
 
-  
-
   // console.log(fs.statSync("geolocation.txt").size+' bytes');
-  console.log("JS memory: " + memory.js.used + "/" + memory.js.total);
+  // console.log("JS memory: " + memory.js.used + "/" + memory.js.total);
 }
 
 setInterval(() => {
   generateData();
-  // console.log(todayStats.adjusted.calories); // calorii
-  // console.log(todayStats.adjusted.elevationGain); //floors
-  // console.log(todayStats.adjusted.distance);  //distanta in metri
-  // console.log(`${todayStats.adjusted.activeZoneMinutes.total} Active Minutes`);  //total=cardio+fatBurn+peak -> pot fi luate si separat
 }, 1000);
 //nu are giroscop+orientare
+
+
+// if (Accelerometer) {
+//   // 30 readings per second, 60 readings per batch
+//   // the callback will be called once every two seconds
+//   const accel = new Accelerometer({ frequency: 30, batch: 60 });
+//   accel.addEventListener("reading", () => {
+//     for (let index = 0; index < accel.readings.timestamp.length; index++) {
+//       console.log(
+//         `Accelerometer Reading: \
+//           timestamp=${accel.readings.timestamp[index]}, \
+//           [${accel.readings.x[index]}, \
+//           ${accel.readings.y[index]}, \
+//           ${accel.readings.z[index]}]`
+//       );
+//     }
+//   });
+
+//   accel.start();
+// }

@@ -8,28 +8,15 @@ admin.initializeApp({
 const db = admin.firestore();
 
 // const ip="192.168.62.53";
-// const ip = "192.168.100.30";
-const ip = "127.0.0.1";
+const ip = "192.168.100.30";
+// const ip = "127.0.0.1";
 const wss = new WebSocket.Server({ port: 3000, host: ip });
 var msgActivity = "";
 var msgHR = "";
 var msgGeolocation = "";
 var msgAccelerometer = "";
 var msgBarometer = "";
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+
 wss.on("connection", function connection(ws) {
   console.log("Client connected");
   ws.on("message", function incoming(message) {
@@ -241,39 +228,3 @@ wss.on("connection", function connection(ws) {
   }, 60000);
 });
 // toBeSent: steps,calories,floors,distance,AM,hr,lat,long,accelX,accelY,accelZ,barometerpressure
-
-// var currentdate = new Date();
-// var datetime =
-//   '03' +
-//   "-" +
-//   '18' +
-//   "-" +
-//   currentdate.getFullYear() +
-//   " @ " +
-//   ("0" + currentdate.getHours()).slice(-2) +
-//   ":" +
-//   ("0" + currentdate.getMinutes()).slice(-2) +
-//   ":" +
-//   ("0" + currentdate.getSeconds()).slice(-2);
-
-// const docRef = db.collection("stepsGraph").doc(`${datetime}`);
-// setTimeout(() => {
-//   docRef.set({
-//     date: currentdate,
-//     steps: 5500,
-//   });
-// }, 0);
-
-// db.collection("stats")
-//   .get()
-//   .then(function (querySnapshot) {
-//     querySnapshot.forEach(function (doc) {
-//       // doc.data() is never undefined for query doc snapshots
-//       // console.log(doc.id, " => ", doc.data()["steps"]);
-
-//       db.collection("stepsGraph").doc(doc.id).set({
-//         date: doc.data()["date"],
-//         steps: doc.data()["steps"],
-//       });
-//     });
-//   });
