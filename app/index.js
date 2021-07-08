@@ -100,12 +100,12 @@ if (Accelerometer) {
   // sampling at 1Hz (once per second)
   accel = new Accelerometer({ frequency: 1 });
   accel.addEventListener("reading", () => {
-    console.log(
-      `ts: ${accel.timestamp}, \
-       x: ${accel.x}, \
-       y: ${accel.y}, \
-       z: ${accel.z}`
-    );
+    // console.log(
+    //   `ts: ${accel.timestamp}, \
+    //    x: ${accel.x}, \
+    //    y: ${accel.y}, \
+    //    z: ${accel.z}`
+    // );
   });
   accel.start();
 }
@@ -207,22 +207,3 @@ setInterval(() => {
 }, 1000);
 //nu are giroscop+orientare
 
-
-// if (Accelerometer) {
-//   // 30 readings per second, 60 readings per batch
-//   // the callback will be called once every two seconds
-//   const accel = new Accelerometer({ frequency: 30, batch: 60 });
-//   accel.addEventListener("reading", () => {
-//     for (let index = 0; index < accel.readings.timestamp.length; index++) {
-//       console.log(
-//         `Accelerometer Reading: \
-//           timestamp=${accel.readings.timestamp[index]}, \
-//           [${accel.readings.x[index]}, \
-//           ${accel.readings.y[index]}, \
-//           ${accel.readings.z[index]}]`
-//       );
-//     }
-//   });
-
-//   accel.start();
-// }

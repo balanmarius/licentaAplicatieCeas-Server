@@ -212,7 +212,7 @@ wss.on("connection", function connection(ws) {
       msgLength = Object.keys(msgjson).length;
       if (msgLength > 0) {
         if (msgjson.id == "activity") {
-          console.log("Live stepssssssssssssss: " + msgjson["current steps"]);
+          console.log("Live steps: " + msgjson["current steps"]);
         }
       }
       toBeSent.push(msgjson["current steps"]);
